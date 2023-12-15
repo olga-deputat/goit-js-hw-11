@@ -1,22 +1,32 @@
 import axios from "axios";
-axios.defaults.headers.common["x-api-key"] = "live_cNyjISVs1MLXg21zyo3c8W3FVMoEuDt9sffQhFusob9TJiD893KhgDU2b6rmiDyG";
+const BASE_URL = 'https://pixabay.com/api/';
+export class PhotoAPI {
+    constructor() {
+        this.searchQuery = '';
+        this.page = 1;
+        this.per_page = 40;
+    }
 
+    async getPhotos() {
+        const PARAMS = new URLSearchParams({
+            key: '41257061-cd419ef5d23acc8e54ce57efe',
+            q: this.searchQuery,
+            image_type: 'photo',
+            orientation: 'horizontal',
+            safesearch: 'true',
+            page: this.page,
+            per_page: this.per_page,
+        });
 
-export function fetchBreeds() {
-    const BASE_URL = 'https://api.thecatapi.com/v1';
-    const END_POINT = '/breeds';
-
-    const url = `${BASE_URL}${END_POINT}`;
+        const url = `${BASE_URL}?${PARAMS}`;
+        const { data } = await axios.get(url, PARAMS);
+        return data;
     
-    return axios.get(url);
-}
-
-export function fetchCatByBreed(breedId) {
-    const BASE_URL = 'https://api.thecatapi.com/v1';
-    const END_POINT = '/images/search';
-    const config = { params: { breed_ids: breedId } };
-
-    const url = `${BASE_URL}${END_POINT}`;
-
-    return axios.get(url, config);
+    }
+    incrementPage() { 
+        this.page += 1;
+    }
+    getPage() {
+        return this.page;
+    }
 }
